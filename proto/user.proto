@@ -1,0 +1,268 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+package proto;
+option go_package = "./proto";
+
+/*
+ * 所有请求需要通过Metadata验证appid和appkey
+ */
+service User {
+        /* 服务检测 */
+        rpc Ping (NullRequest) returns (Reply) {}
+        /* 生成验证码 */
+        rpc CreateValidateCode (NullRequest) returns (ValidateCodeReply) {}
+        /* 校验验证码 */
+        rpc VerifyValidateCode (VerifyValidateCodeRequest) returns (Reply) {}
+        /* 创建新用户 */
+        rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {}
+        /* 更新用户信息 */
+        rpc UpdateUserInfo (UpdateUserInfoRequest) returns (Reply) {}
+        /* 修改用户状态 */
+        rpc ChangingUserStatus (ChangingUserStatusRequest) returns (Reply) {}
+        /* 获取用户列表 */
+        rpc GetUserList (PaginateRequest) returns (GetUserListReply) {}
+        /* 校验用户密码 */
+        rpc UserPassVerify (UserPassVerifyRequest) returns (Reply) {}
+        /* Token生成 */
+        rpc TokenCreate (TokenCreateRequest) returns (Token) {}
+        /* Token验证 */
+        rpc TokenVerify (Token) returns (TokenVerifyReply) {}
+        /* Token更新 */
+        rpc TokenRefresh (Token) returns (Token) {}
+        /* 菜单权限模板注入 - 多次调用覆盖*/
+        rpc PermissionsTpl (PermissionsTplRequest) returns (Reply) {}
+        /* 启用/禁用菜单 */
+        rpc DisableMenu (DisableMenuRequest) returns (Reply) {}
+        /* 获取应用菜单 */
+        rpc GetAppMenus (NullRequest) returns (MenusReply) {}
+        /* 创建应用角色 */
+        rpc CreateRole (RoleInfo) returns (Reply) {}
+        /* 编辑应用角色 */
+        rpc UpdateRole (UpdateRoleRequest) returns (Reply) {}
+        /* 删除应用角色 */
+        rpc DeleteRole (DeleteRoleRequest) returns (Reply) {}
+        /* 获取应用角色列表 */
+        rpc GetRoleList (PaginateRequest) returns (GetRoleListReply) {}
+        /* 角色用户绑定（多用户） */
+        rpc BindRoleUsers (BindRoleUsersRequest) returns (Reply) {}
+        /* 角色用户绑定 */
+        rpc BindRoleUser (BindRoleUserRequest) returns (Reply) {}
+        /* 角色用户解绑 */
+        rpc UnBindRoleUser (BindRoleUserRequest) returns (Reply) {}
+        /* 验证用户是否有某个菜单动作权限 */
+        rpc AuthorityVerify (AuthorityVerifyRequest) returns (Reply) {}
+}
+
+message VerifyValidateCodeRequest {
+        string CodeId = 1;        // 验证码ID
+        string CodeValue = 2;     // 验证码内容
+}
+
+message ValidateCodeReply {
+        string CodeId = 1;        // 验证码ID
+        string ImageData = 2;     // 验证码图片
+}
+
+message AuthorityVerifyRequest {
+        string Code = 1;        // 菜单编码
+        uint32 ActionValue = 2; // 权限值,即MenusReply.MenusNode.ActionsEntry返回的值
+        uint32 UserId = 3;      // 用户id
+}
+
+message BindRoleUsersRequest {
+        uint32 RoleId = 1;               // 角色id
+        repeated uint32 UserId = 2;      // 角色绑定的所有用户id，每次覆盖
+}
+
+message BindRoleUserRequest {
+        uint32 RoleId = 1;      // 角色id
+        uint32 UserId = 2;      // 用户id
+}
+
+message DeleteRoleRequest {
+        uint32 Id = 1;          // 角色id
+}
+
+message UpdateRoleRequest {
+        uint32 Id = 1;          // 角色id
+        RoleInfo RoleInfo = 2;  // 角色详情 
+}
+
+/*
+ * 角色详情
+ */
+message RoleInfo {
+        string Name = 1;                        // 角色名
+        string Remark = 2;                      // 备注,新增可不传，编辑必传
+        bool Status = 3;                        // 状态,新增可不传，编辑必传
+        uint32 Sequence = 4;                    // 排序,新增可不传，编辑必传
+        map<string, uint32> Permissions = 5;    // 权限
+}
+
+/*
+ * 修改菜单状态入参
+ */
+message DisableMenuRequest {
+        string Code = 1;        // 菜单编码
+        bool   Status = 2;      // 状态
+}
+
+message MenusReply {
+        message MenusNode {
+                string Code = 1;                        // 菜单编码
+                string Name = 2;                        // 菜单名称
+                uint32 Sequence = 3;                    // 排序
+                string Uri = 4;                         // 路由
+                map<string, uint32> Actions = 5;        // 授权动作
+                repeated MenusNode Children = 7;        // 下级节点
+                string Remark = 6;                      // 备注
+                bool Status = 8;                        // 状态
+        }
+        repeated MenusNode Node = 1;
+}
+
+message PermissionsTplRequest {
+        message PermissionsNode {
+                string Code = 1;                        // 菜单编码
+                string Name = 2;                        // 菜单名称
+                uint32 Sequence = 3;                    // 排序
+                string Uri = 4;                         // 路由
+                repeated string Actions = 5;            // 授权动作
+                repeated PermissionsNode Children = 7;  // 下级节点
+                string Remark = 6;                      // 备注
+        }
+        repeated PermissionsNode Node = 1;
+}
+
+message TokenCreateRequest {
+        uint32 UserId = 1;       // 用户id
+        string Issuer = 2;       // 发行标记
+}
+
+message Token {
+        string Token = 1;       // 用户登录凭证
+}
+
+/*
+ * Token验证响应
+ */
+message TokenVerifyReply {
+       uint32 UserId = 1;       // 用户id
+       uint64 ExpiresAt = 2;    // 过期时间
+       string Issuer = 3;       // 发行标记
+       repeated MenusReply.MenusNode MenuPermissions = 4;  // 用户当前应用菜单权限
+}
+
+/*
+ * 分页列表入参
+ */
+message PaginateRequest {
+        uint32 Page = 1;                        // 页数
+        uint32 Limit = 2;                       // 每页数量
+        map<string, google.protobuf.ListValue> Search = 3;         // 搜索关键字,key为要搜索的值,value为数据库字段，多个value匹配其中一个,如模糊搜索名称或描述
+}
+
+/*
+ * 分页列表响应
+ */
+message PaginateReply {
+        uint32 Page = 1;        // 页数
+        uint32 Pages = 2;       // 总页数
+        uint32 Total = 3;       // 数据总数
+        uint32 Limit = 4;       // 每页数量
+}
+
+message GetUserListReply {
+        message UserListData {
+                uint32 Id = 1;  // 用户Id
+                string CreatedAt = 2;   // 创建时间
+                string UpdatedAt = 3;   // 最近更新时间
+                string Account = 4;     // 账号
+                string NickName = 5;    // 昵称
+                string Mobile = 6;      // 手机号
+                string Email = 7;       // 邮箱
+                bool   Status = 8;      // 状态
+                string LoginedAt = 9;   // 最后登录时间
+                UserInfo Info = 10;     // 用户详情
+        }
+        PaginateReply Paginate = 1;
+        repeated UserListData Docs = 2;
+}
+
+message GetRoleListReply {
+        message RoleListData {
+                uint32 Id = 1;  // 角色Id
+                string CreatedAt = 2;   // 创建时间
+                string UpdatedAt = 3;   // 最近更新时间
+                string Name = 4;        // 角色名
+                string Remark = 5;      // 备注
+                uint32 Sequence = 6;    // 排序
+                bool   Status = 7;      // 状态
+                repeated RoleAuthoritys RoleAuthoritys = 8;      // 角色权限详情
+                repeated uint32 AssUserIds = 9;  // 关联用户id
+        }
+        message RoleAuthoritys {
+                string Code = 1;        // 菜单code
+                uint32 ActionValue = 2; // 权限值
+        }
+        PaginateReply Paginate = 1;
+        repeated RoleListData Docs = 2;
+}
+
+/*
+ * 更新用户入参
+ */
+message UpdateUserInfoRequest {
+        uint32 Id = 1;          // 用户id
+        UserInfo UserInfo = 2;  // 用户详情
+}
+
+/*
+ * 新建用户入参
+ */
+message CreateUserRequest {
+        string Account = 1;     // 账号
+        string Password = 2;    // 密码
+        string NickName = 3;    // 昵称
+        string Mobile = 4;      // 手机号码
+        string Email = 5;       // 邮箱地址
+        UserInfo UserInfo = 6;  // 用户详情
+}
+
+/*
+ * 用户详情
+ */
+message UserInfo {
+        string RealName = 1;    // 姓名
+        uint32 Age = 2;         // 年龄
+        uint32 Sex = 3;         // 性别
+        string Nation = 4;      // 民族
+        string Address = 5;     // 住址
+        string IdCard = 6;      // 身份证号码   
+}
+
+/*
+ * 新建用户响应
+ */
+message CreateUserReply {
+        uint32 UserId = 1;      // 用户Id
+}
+
+message ChangingUserStatusRequest {
+        uint32 Id = 1;          // 用户id
+        bool   Status = 2;      // 状态
+}
+
+message Reply {
+        bool Status = 1;
+}
+
+message NullRequest {}
+
+message UserPassVerifyRequest {
+        string Type = 1;        // 类型，account|email|mobile
+        string Value = 2;       // 对应类型的值
+        string Password = 3;    // 密码
+}

@@ -1,0 +1,3 @@
+/*! 
+ Build Time : 1650194964000 */
+System.register(["../gva/gin-vue-admin-index-legacy.1650194964000.js"],(function(e){"use strict";var n,t,u,r,i,a,c,l,o,s,f;return{setters:[function(e){n=e.F,t=e.b,u=e.o,r=e.c,i=e.e,a=e.w,c=e.T,l=e.l,o=e.x,s=e.g,f=e.K}],execute:function(){var d={name:"System"};e("default",Object.assign(d,{setup:function(e){var d=n();return function(e,n){var v=t("router-view");return u(),r("div",null,[i(v,null,{default:a((function(e){var n=e.Component;return[i(c,{mode:"out-in",name:"el-fade-in-linear"},{default:a((function(){return[(u(),l(f,{include:s(d).keepAliveRouters},[(u(),l(o(n)))],1032,["include"]))]})),_:2},1024)]})),_:1})])}}}))}}}));

@@ -1,0 +1,59 @@
+
+%define user_group dvs
+%define installpath /usr/local/svc-user
+%define logpath /var/log/svc-user
+%define sharepath /usr/local/svc-user/docs
+
+Name:           svc-user
+License:        GPL
+Group:          sunlight
+Url:            www.sunlight-tech.com
+Version:        _VERSION_
+Release:        _RELEASE_
+Summary:        User Managed System
+Source:         %{name}.%{version}.%{release}.tar.gz
+Source1:        %{name}.service
+Source2:        %{name}.yml
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+BuildRequires:  systemd
+Conflicts:      %{name} <= %{version}
+
+%description
+
+%prep
+%setup -c
+
+%install
+install -d $RPM_BUILD_ROOT%{installpath}
+install -d $RPM_BUILD_ROOT%{sharepath}
+cp -a %{name}.%{version}.%{release}/%{name} $RPM_BUILD_ROOT%{installpath}/
+cp -a %{name}.%{version}.%{release}/docs/* $RPM_BUILD_ROOT%{sharepath}/
+install -D -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
+install -D -m 0644 %{SOURCE2} $RPM_BUILD_ROOT/etc/%{name}.yml
+
+%post
+%service_add_post %{name}.service
+mkdir -p %{logpath}/%{name}
+chown -R %{user_group}:%{user_group} %{logpath}
+
+%postun
+%service_del_postun %{name}.service
+
+%pre 
+%service_add_pre %{name}.service
+%{_sbindir}/groupadd -r %{user_group} &>/dev/null ||:
+%{_sbindir}/useradd -g %{user_group} -s /bin/false -r -c "user for %{user_group}" %{user_group} &>/dev/null ||:
+
+%preun
+%service_del_preun %{name}.service
+
+%clean
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_DIR/%{name}-%{version}
+
+%files
+%defattr(-, dvs, dvs)
+%config(noreplace) /etc/%{name}.yml
+%{_unitdir}/%{name}.service
+%{installpath}
+%{sharepath}

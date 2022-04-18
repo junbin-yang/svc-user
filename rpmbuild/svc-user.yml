@@ -1,0 +1,22 @@
+listen: 0.0.0.0:8888
+logger:
+  dir: /var/log/svc-user
+  level: 5
+  rotate: true
+  keepdays: 7
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  pass: 123456
+  user: root
+  name: dvsdb30
+redis:
+  cluster: false
+  addr: 
+    - 127.0.0.1:6379
+  pass: 123456
+smtp:
+  host: smtp.exmail.qq.com
+  port: 25
+  user: xxx@xxx.com
+  pass: xxx

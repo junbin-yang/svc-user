@@ -1,0 +1,21 @@
+[Unit]
+Description=svc-user
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# modify when deploy in prod env
+User=dvs
+Group=dvs
+
+Type=simple
+#Environment="GIN_MODE=release"
+ExecStart=/usr/local/svc-user/svc-user
+WorkingDirectory=/usr/local/svc-user
+
+Restart=always
+RestartSec=1
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
