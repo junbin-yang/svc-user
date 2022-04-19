@@ -41,13 +41,10 @@ cd $BASE_DIR
 /usr/local/protoc/bin/protoc --php_out=sdk/php ./proto/user.proto
 swag init --exclude proto
 
-sed -i s/0.0.0.000/$VERSION/g  $BASE_DIR/config/config.go
-sed -i s/0000-00-00/$(date "+%Y-%m-%d")/g $BASE_DIR/config/config.go
-
 mkdir -p ${SOURCES}/${BasicName}.${VERSION}/docs
 mkdir -p ${SOURCES}/${BasicName}.${VERSION}/web/dist
 
-go build
+go build -ldflags "-X svc-user/config.VERSION=${VERSION} -X 'svc-user/config.BUILD_TIME=`date "+%Y-%m-%d"`' -X 'svc-user/config.GO_VERSION=`go version`'"
 mv ${BasicName} ${SOURCES}/${BasicName}.${VERSION}/
 cp -ar docs/* ${SOURCES}/${BasicName}.${VERSION}/docs/
 cp -ar web/dist/* ${SOURCES}/${BasicName}.${VERSION}/web/dist/

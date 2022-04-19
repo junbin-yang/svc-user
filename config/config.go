@@ -11,6 +11,12 @@ import (
 	"svc-user/constant"
 )
 
+var (
+	VERSION    string = "undefined"
+	BUILD_TIME string = "undefined"
+	GO_VERSION string = "undefined"
+)
+
 type Config struct {
 	Release bool
 	Listen  string
@@ -42,7 +48,7 @@ type Config struct {
 
 func init() {
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, constant.AppName+", version: 0.0.0.000 (built at 0000-00-00)")
+		fmt.Fprintln(os.Stdout, constant.AppName+", version: "+VERSION+" (built at "+BUILD_TIME+") "+GO_VERSION)
 		flag.PrintDefaults()
 	}
 	flag.Parse()
