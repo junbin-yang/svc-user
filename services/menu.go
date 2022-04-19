@@ -146,6 +146,14 @@ func getMenus(pid uint, appid string, userId uint) []*proto.MenusReply_MenusNode
 		model.M.Model(&model.Menu{}).Where("p_id = ? AND app_key = ?", node.ID, appid).Count(&count)
 		if count > 0 {
 			children = getMenus(node.ID, appid, userId)
+			// 如果下级是叶子节点且没有权限。当前节点设置为false
+			if node.Status {
+				for _, next := range children {
+					if len(next.Actions) == 0 && len(next.Children) == 0 {
+						node.Status = false
+					}
+				}
+			}
 		}
 
 		actions := []string{}
