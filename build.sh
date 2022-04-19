@@ -61,5 +61,5 @@ sed -i "s/_VERSION_/$sVERSION/g" $SPECS/${BasicName}.spec
 sed -i "s/_RELEASE_/$release/g" $SPECS/${BasicName}.spec
 
 rpmbuild --buildroot=/usr/src/packages -bb $SPECS/${BasicName}.spec
-#rm -rf ${SOURCES}/${BasicName}.*
+rm -rf ${SOURCES}/${BasicName}.*
 #rm -rf ${SRPMS}/${BasicName}.*
