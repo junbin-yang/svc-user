@@ -24,7 +24,7 @@ service User {
         /* 获取用户列表 */
         rpc GetUserList (PaginateRequest) returns (GetUserListReply) {}
         /* 校验用户密码 */
-        rpc UserPassVerify (UserPassVerifyRequest) returns (Reply) {}
+        rpc UserPassVerify (UserPassVerifyRequest) returns (Token) {}
         /* Token生成 */
         rpc TokenCreate (TokenCreateRequest) returns (Token) {}
         /* Token验证 */

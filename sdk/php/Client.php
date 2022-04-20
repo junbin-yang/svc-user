@@ -120,7 +120,7 @@ class Client extends \Grpc\BaseStub {
         return $this->_simpleRequest(
             '/proto.User/UserPassVerify',
             $argument,
-            ['\Proto\Reply', 'decode'],
+            ['\Proto\Token', 'decode'],
             $this->metadata, $this->options
         );
     }

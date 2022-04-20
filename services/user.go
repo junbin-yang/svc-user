@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"math/rand"
 	"regexp"
+	"svc-user/jwt"
 	"svc-user/model"
 	"svc-user/proto"
 	"svc-user/utils/encoding"
@@ -550,7 +551,7 @@ func (this *Svr) AdminUpdateUser(c *see.Context) Response {
 	return Success("修改成功")
 }
 
-func (this *Svr) UserPassVerify(ctx context.Context, in *proto.UserPassVerifyRequest) (*proto.Reply, error) {
+func (this *Svr) UserPassVerify(ctx context.Context, in *proto.UserPassVerifyRequest) (*proto.Token, error) {
 	userInfo := new(model.User)
 	password := encoding.EncryptMd5(in.Password)
 	switch in.Type {
@@ -571,5 +572,9 @@ func (this *Svr) UserPassVerify(ctx context.Context, in *proto.UserPassVerifyReq
 		return nil, grpc.Errorf(codes.DataLoss, "账号已禁用")
 	}
 
-	return ProtoSucceed(), nil
+	token, err := jwt.Create(uint64(userInfo.ID), false, "")
+	if err != nil {
+		return nil, grpc.Errorf(codes.DataLoss, err.Error())
+	}
+	return &proto.Token{Token: token}, nil
 }

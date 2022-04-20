@@ -407,7 +407,7 @@ class Api {
             $response->SetError($status->details);
             return $response;
         }
-        $response->SetData($res->getStatus());
+        $response->SetData($res->getToken());
         return $response;
     }
 
