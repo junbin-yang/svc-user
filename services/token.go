@@ -26,6 +26,7 @@ func (this *Svr) TokenVerify(ctx context.Context, in *proto.Token) (*proto.Token
 		UserId:          uint32(token.UserId),
 		ExpiresAt:       uint64(token.StandardClaims.ExpiresAt),
 		Issuer:          token.StandardClaims.Issuer,
+		Admin:           token.Admin,
 		MenuPermissions: getMenus(0, appid, uint(token.UserId)),
 	}, nil
 }
