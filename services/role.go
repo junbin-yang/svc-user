@@ -28,6 +28,7 @@ func (this *Svr) CreateRole(ctx context.Context, in *proto.RoleInfo) (*proto.Rep
 		Name:           in.Name,
 		Remark:         in.Remark,
 		AppKey:         appid,
+		Status:         in.Status,
 		RoleAuthoritys: authoritys,
 	}
 	e := role.Create()
