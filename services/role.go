@@ -28,7 +28,7 @@ func (this *Svr) CreateRole(ctx context.Context, in *proto.RoleInfo) (*proto.Rep
 		Name:           in.Name,
 		Remark:         in.Remark,
 		AppKey:         appid,
-		Status:         in.Status,
+		Status:         &in.Status,
 		RoleAuthoritys: authoritys,
 	}
 	e := role.Create()
@@ -49,7 +49,7 @@ func (this *Svr) UpdateRole(ctx context.Context, in *proto.UpdateRoleRequest) (*
 		Name:           in.RoleInfo.Name,
 		Remark:         in.RoleInfo.Remark,
 		AppKey:         appid,
-		Status:         in.RoleInfo.Status,
+		Status:         &in.RoleInfo.Status,
 		Sequence:       in.RoleInfo.Sequence,
 		RoleAuthoritys: authoritys,
 	}
@@ -151,7 +151,7 @@ func (this *Svr) AdminCreateRole(c *see.Context) Response {
 		Name:           parameters.Name,
 		Remark:         parameters.Remark,
 		AppKey:         parameters.AppId,
-		Status:         *parameters.Status,
+		Status:         parameters.Status,
 		Sequence:       parameters.Sequence,
 		RoleAuthoritys: authoritys,
 	}
@@ -195,7 +195,7 @@ func (this *Svr) AdminUpdateRole(c *see.Context) Response {
 		Name:           parameters.Name,
 		Remark:         parameters.Remark,
 		AppKey:         parameters.AppId,
-		Status:         *parameters.Status,
+		Status:         parameters.Status,
 		Sequence:       parameters.Sequence,
 		RoleAuthoritys: authoritys,
 	}

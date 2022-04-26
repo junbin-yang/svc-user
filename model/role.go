@@ -17,7 +17,7 @@ type Role struct {
 	Name           string `gorm:"type:varchar(256);not null;default:'';comment:'名称'"`
 	Remark         string `gorm:"size:2048;not null;default:'';comment:'备注'"`
 	Sequence       uint32 `gorm:"comment:'排序'"`
-	Status         bool   `gorm:"default:true"`
+	Status         *bool  `gorm:"default:true"`
 	AppKey         string `gorm:"not null;`
 	RoleAuthoritys []RoleAuthority
 	UserCount      int64       `gorm:"-"`
