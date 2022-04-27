@@ -11,7 +11,7 @@ import (
 */
 func init() {
 	M.AutoMigrate(&User{}) //仅会创建表，缺少列和索引，并不会改变现有列的类型或删除未使用的列。
-	M.Migrator().AlterColumn(&User{}, "LoginedAt")
+	//M.Migrator().AlterColumn(&User{}, "LoginedAt")
 	root := User{
 		Account:  "root",
 		Password: "e10adc3949ba59abbe56e057f20f883e",
