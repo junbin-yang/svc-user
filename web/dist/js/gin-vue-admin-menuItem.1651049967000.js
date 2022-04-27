@@ -1,0 +1,3 @@
+/*! 
+ Build Time : 1651049967000 */
+import{_ as e,b as t,o as a,l as n,w as o,d as s,t as r,x as u,f as i}from"../gva/gin-vue-admin-index.1651049967000.js";const f={class:"gva-menu-item-title"},l={name:"MenuItem"};var m=e(Object.assign(l,{props:{routerInfo:{default:function(){return null},type:Object}},setup:e=>(l,m)=>{const d=t("el-icon"),c=t("el-menu-item");return a(),n(c,{index:e.routerInfo.name},{title:o((()=>[s("span",f,r(e.routerInfo.meta.title),1)])),default:o((()=>[e.routerInfo.meta.icon?(a(),n(d,{key:0},{default:o((()=>[(a(),n(u(e.routerInfo.meta.icon)))])),_:1})):i("",!0)])),_:1},8,["index"])}}),[["__scopeId","data-v-76fde51a"]]);export{m as default};

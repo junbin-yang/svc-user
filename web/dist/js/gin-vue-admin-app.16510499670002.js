@@ -1,0 +1,3 @@
+/*! 
+ Build Time : 1651049967000 */
+import{s as a}from"../gva/gin-vue-admin-index.1651049967000.js";const t=t=>a({url:"/api/admin/app/list",method:"post",data:t}),p=t=>a({url:"/api/admin/app/getAppById",method:"post",data:t}),d=t=>a({url:"/api/admin/app/updateApp",method:"post",data:t}),e=t=>a({url:"/api/admin/app/register",method:"post",data:t}),o=t=>a({url:"/api/admin/role/list",method:"post",data:t}),i=t=>a({url:"/api/admin/role/updateRole",method:"post",data:t}),s=t=>a({url:"/api/admin/role/createRole",method:"post",data:t}),m=t=>a({url:"/api/admin/role/bindUser",method:"post",data:t});export{p as a,o as b,e as c,i as d,s as e,m as f,t as g,d as u};
