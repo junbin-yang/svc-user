@@ -17,6 +17,6 @@ redis:
   pass: 123456
 smtp:
   host: smtp.exmail.qq.com
-  port: 25
+  port: 465
   user: xxx@xxx.com
   pass: xxx
