@@ -13,7 +13,6 @@ import (
 	"gopkg.in/gomail.v2"
 	"net"
 	"net/http"
-	"net/smtp"
 	"os"
 	"os/signal"
 	"svc-user/config"

@@ -40,7 +40,7 @@ type Config struct {
 	}
 	Smtp struct {
 		Host string
-		Port string
+		Port int
 		User string
 		Pass string
 	}
