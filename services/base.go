@@ -1,8 +1,8 @@
 package services
 
 import (
+	"crypto/tls"
 	"fmt"
-	"github.com/jordan-wright/email"
 	"github.com/junbin-yang/golib/captcha"
 	"github.com/junbin-yang/golib/redisx"
 	"github.com/junbin-yang/see"
@@ -10,6 +10,7 @@ import (
 	"github.com/soheilhy/cmux"
 	swaggerFiles "github.com/swaggo/files"
 	"google.golang.org/grpc"
+	"gopkg.in/gomail.v2"
 	"net"
 	"net/http"
 	"net/smtp"
@@ -42,11 +43,8 @@ func init() {
 	}
 	App.Redis.Connect()
 
-	var err error
-	App.Email, err = email.NewPool(App.Conf.Smtp.Host+":"+App.Conf.Smtp.Port, 5, smtp.PlainAuth("", App.Conf.Smtp.User, App.Conf.Smtp.Pass, App.Conf.Smtp.Host))
-	if err != nil {
-		panic(err)
-	}
+	App.Email = gomail.NewDialer(App.Conf.Smtp.Host, App.Conf.Smtp.Port, App.Conf.Smtp.User, App.Conf.Smtp.Pass)
+	App.Email.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 }
 
 type Svr struct {
@@ -54,7 +52,7 @@ type Svr struct {
 	Conf  *config.Config
 	See   *see.Engine
 	Redis redisx.Rediser
-	Email *email.Pool
+	Email *gomail.Dialer
 }
 
 func (this *Svr) Run() {
@@ -176,11 +174,13 @@ func JWTAuth() func(c *see.Context) {
 }
 
 func (this *Svr) SendEmail(receiver, title, content string) error {
-	e := &email.Email{
-		From:    fmt.Sprintf("%s<%s>", this.Name, this.Conf.Smtp.User),
-		To:      []string{receiver},
-		Subject: title,
-		Text:    []byte(content),
-	}
-	return this.Email.Send(e, 5*time.Second)
+	msg := gomail.NewMessage()
+	msg.SetHeader("From", fmt.Sprintf("%s<%s>", this.Name, this.Conf.Smtp.User))
+	msg.SetHeader("To", receiver)
+	//msg.SetAddressHeader("Cc", "dan@example.com", "Dan")
+	msg.SetHeader("Subject", title)
+	msg.SetBody("text/html", content)
+	//msg.Attach("/home/Alex/lolcat.jpg")
+
+	return this.Email.DialAndSend(msg)
 }
