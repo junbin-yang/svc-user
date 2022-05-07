@@ -448,7 +448,9 @@ func GetUserPermissions(appkey string, userId uint) map[string]uint32 {
 	model.M.Where("app_key = ? AND user_id = ?", appkey, userId).Find(&roleUserMap)
 	roleIds := []uint{}
 	for _, role := range roleUserMap {
-		roleIds = append(roleIds, role.RoleID)
+		if find := model.M.Where("status = ? AND id = ?", 1, role.RoleID).First(&model.Role{}).RowsAffected; find > 0 {
+			roleIds = append(roleIds, role.RoleID)
+		}
 	}
 
 	rows, err := model.M.Table("role_authorities").Where("role_id IN ?", roleIds).Rows()
