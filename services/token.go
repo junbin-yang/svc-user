@@ -9,7 +9,7 @@ import (
 )
 
 func (this *Svr) TokenCreate(ctx context.Context, in *proto.TokenCreateRequest) (*proto.Token, error) {
-	token, err := jwt.Create(uint64(in.UserId), false, in.Issuer)
+	token, err := jwt.Create(uint64(in.UserId), false, in.Account, in.NickName, in.Issuer)
 	if err != nil {
 		return nil, grpc.Errorf(codes.DataLoss, err.Error())
 	}

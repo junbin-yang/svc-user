@@ -139,6 +139,8 @@ message PermissionsTplRequest {
 message TokenCreateRequest {
         uint32 UserId = 1;       // 用户id
         string Issuer = 2;       // 发行标记
+        string Account = 3;
+        string NickName = 4;
 }
 
 message Token {
