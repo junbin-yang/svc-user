@@ -76,7 +76,7 @@ func (this *Svr) Login(c *see.Context) Response {
 		return Failure("账号已禁用")
 	}
 
-	token, err := jwt.Create(uint64(userInfo.ID), userInfo.Admin, "basic")
+	token, err := jwt.Create(uint64(userInfo.ID), userInfo.Admin, userInfo.Account, userInfo.NickName, "basic")
 	if err != nil {
 		logger.Error(err.Error())
 		return Failure("Create Token Fail")

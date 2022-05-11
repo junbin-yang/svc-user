@@ -9,15 +9,19 @@ import (
 const SecretKey = "OY8cdXmWzn5VPMZfmOODASlAUG6jTSZZ"
 
 type jwtCustomClaims struct {
-	UserId uint64 `json:"userId"`
-	Admin  bool   `json:"admin"`
+	UserId   uint64 `json:"userId"`
+	Admin    bool   `json:"admin"`
+	Account  string `json:"account"`
+	NickName string `json:"nickName"`
 	jwt.StandardClaims
 }
 
-func Create(userId uint64, isAdmin bool, issuer string) (string, error) {
+func Create(userId uint64, isAdmin bool, account string, nickName string, issuer string) (string, error) {
 	claims := &jwtCustomClaims{
-		UserId: userId,
-		Admin:  isAdmin,
+		UserId:   userId,
+		Admin:    isAdmin,
+		Account:  account,
+		NickName: nickName,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: int64(time.Now().Add(time.Hour * 2).Unix()),
 			Issuer:    issuer,

@@ -28,6 +28,8 @@ func (this *Svr) TokenVerify(ctx context.Context, in *proto.Token) (*proto.Token
 		Issuer:          token.StandardClaims.Issuer,
 		Admin:           token.Admin,
 		MenuPermissions: getMenus(0, appid, uint(token.UserId)),
+		Account:         token.Account,
+		NickName:        token.NickName,
 	}, nil
 }
 

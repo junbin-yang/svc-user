@@ -154,6 +154,8 @@ message TokenVerifyReply {
        string Issuer = 3;       // 发行标记
        bool Admin = 4;          // 是否超级管理员
        repeated MenusReply.MenusNode MenuPermissions = 5;  // 用户当前应用菜单权限
+       string Account = 6;
+       string NickName = 7;
 }
 
 /*

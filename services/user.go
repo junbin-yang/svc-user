@@ -574,7 +574,7 @@ func (this *Svr) UserPassVerify(ctx context.Context, in *proto.UserPassVerifyReq
 		return nil, grpc.Errorf(codes.DataLoss, "账号已禁用")
 	}
 
-	token, err := jwt.Create(uint64(userInfo.ID), userInfo.Admin, "")
+	token, err := jwt.Create(uint64(userInfo.ID), userInfo.Admin, userInfo.Account, userInfo.NickName, "")
 	if err != nil {
 		return nil, grpc.Errorf(codes.DataLoss, err.Error())
 	}
