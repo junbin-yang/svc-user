@@ -63,7 +63,16 @@ func WithSearch(search []SearchKeyWord) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func Paginate(m interface{}, page, limit int, search []SearchKeyWord, association ...string) (Pages, error) {
+func WithCondition(condition string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if len(condition) > 0 {
+			db.Where(condition)
+		}
+		return db
+	}
+}
+
+func Paginate(m interface{}, page, limit int, search []SearchKeyWord, condition string, association ...string) (Pages, error) {
 	if page <= 0 {
 		page = 10
 	}
@@ -72,13 +81,14 @@ func Paginate(m interface{}, page, limit int, search []SearchKeyWord, associatio
 	}
 
 	var total int64
-	M.Scopes(WithSearch(search)).Model(m).Count(&total)
+	M.Scopes(WithSearch(search)).Scopes(WithCondition(condition)).Model(m).Count(&total)
+
 	pageNum := total / int64(limit)
 	if total%int64(limit) != 0 {
 		pageNum++
 	}
 
-	result := M.Order("created_at desc").Scopes(WithSearch(search))
+	result := M.Order("created_at desc").Scopes(WithSearch(search)).Scopes(WithCondition(condition))
 	if association != nil {
 		for _, ass := range association {
 			result = result.Preload(ass)

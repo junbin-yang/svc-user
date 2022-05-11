@@ -88,7 +88,7 @@ func (this *Svr) GetRoleList(ctx context.Context, in *proto.PaginateRequest) (*p
 	in.Search[appid] = appid_str
 
 	roles := []model.Role{}
-	data, e := model.Paginate(&roles, int(in.Page), int(in.Limit), model.ConversionSearchType(in.Search), "RoleAuthoritys")
+	data, e := model.Paginate(&roles, int(in.Page), int(in.Limit), model.ConversionSearchType(in.Search), "", "RoleAuthoritys")
 	if e != nil {
 		return nil, grpc.Errorf(codes.DataLoss, e.Error())
 	}
@@ -224,7 +224,7 @@ func (this *Svr) AdminGetRoleList(c *see.Context) Response {
 	}
 
 	roles := []model.Role{}
-	data, e := model.Paginate(&roles, int(parameters.Page), int(parameters.Limit), model.ConversionSearchType2(parameters.Search), "RoleAuthoritys")
+	data, e := model.Paginate(&roles, int(parameters.Page), int(parameters.Limit), model.ConversionSearchType2(parameters.Search), "", "RoleAuthoritys")
 	if e != nil {
 		return Failure(e.Error())
 	}

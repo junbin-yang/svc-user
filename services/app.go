@@ -80,7 +80,7 @@ func (this *Svr) GetAppList(c *see.Context) Response {
 	}
 
 	u := []model.App{}
-	data, e := model.Paginate(&u, int(parameters.Page), int(parameters.Limit), model.ConversionSearchType2(parameters.Search))
+	data, e := model.Paginate(&u, int(parameters.Page), int(parameters.Limit), model.ConversionSearchType2(parameters.Search), "")
 	if e != nil {
 		return Failure(e.Error())
 	}
