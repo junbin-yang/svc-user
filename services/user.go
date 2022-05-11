@@ -391,7 +391,7 @@ func (this *Svr) ChangingStatusByAdmin(c *see.Context) Response {
 func (this *Svr) GetUserList(ctx context.Context, in *proto.PaginateRequest) (*proto.GetUserListReply, error) {
 	logger.Info(in)
 	u := []model.User{}
-	data, e := model.Paginate(&u, int(in.Page), int(in.Limit), model.ConversionSearchType(in.Search), "account != root", "Info")
+	data, e := model.Paginate(&u, int(in.Page), int(in.Limit), model.ConversionSearchType(in.Search), "account != 'root'", "Info")
 	if e != nil {
 		return nil, grpc.Errorf(codes.DataLoss, e.Error())
 	}
